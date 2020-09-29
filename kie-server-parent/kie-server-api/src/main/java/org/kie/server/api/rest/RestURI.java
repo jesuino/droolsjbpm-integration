@@ -70,6 +70,7 @@ public class RestURI {
     public static final String QUERY_URI = "queries";
     public static final String FORM_URI = "containers/{" + CONTAINER_ID + "}/forms";
     public static final String IMAGE_URI = "containers/{" + CONTAINER_ID + "}/images";
+    public static final String SOURCE_URI = "containers/{" + CONTAINER_ID + "}/sources";
     public static final String QUERY_DEF_URI = "queries/definitions";
     public static final String DOCUMENT_URI = "documents";
     public static final String CASE_URI = "containers/{" + CONTAINER_ID + "}/cases";
@@ -213,6 +214,9 @@ public class RestURI {
     // image prefixed by IMAGE_URI
     public static final String PROCESS_IMG_GET_URI = "processes/{" + PROCESS_ID + "}";
     public static final String PROCESS_INST_IMG_GET_URI = "processes/instances/{" + PROCESS_INST_ID + "}";
+    
+    // source prefixed by SOURCE_URI
+    public static final String PROCESS_SOURCE_GET_URI = "processes/{" + PROCESS_ID + "}";
 
     // query definition related
     public static final String CREATE_QUERY_DEF_POST_URI = "{" + QUERY_NAME + "}";

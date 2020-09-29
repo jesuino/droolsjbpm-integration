@@ -14,12 +14,9 @@
 */
 package org.kie.server.services.jbpm.ui.img;
 
-import java.io.File;
-
 import org.drools.compiler.kie.builder.impl.InternalKieModule;
 import org.drools.compiler.kie.builder.impl.KieContainerImpl;
 import org.kie.api.builder.model.KieBaseModel;
-import org.kie.api.definition.process.*;
 import org.kie.api.runtime.KieContainer;
 
 public class ImageReference {

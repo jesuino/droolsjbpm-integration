@@ -27,6 +27,7 @@ import org.kie.server.services.jbpm.ui.FormRendererBase;
 import org.kie.server.services.jbpm.ui.FormServiceBase;
 import org.kie.server.services.jbpm.ui.ImageServiceBase;
 import org.kie.server.services.jbpm.ui.JBPMUIKieServerExtension;
+import org.kie.server.services.jbpm.ui.SourceServiceBase;
 
 public class JbpmUIRestApplicationComponentsService implements KieServerApplicationComponentsService {
 
@@ -42,6 +43,7 @@ public class JbpmUIRestApplicationComponentsService implements KieServerApplicat
         FormServiceBase formServiceBase = null;
         ImageServiceBase imageServiceBase = null;
         FormRendererBase formRendererBase = null;
+        SourceServiceBase sourceServiceBase = null;
         KieServerRegistry context = null;
 
         for( Object object : services ) {
@@ -55,7 +57,10 @@ public class JbpmUIRestApplicationComponentsService implements KieServerApplicat
             } else if (ImageServiceBase.class.isAssignableFrom(object.getClass())) {
                 imageServiceBase = (ImageServiceBase) object;
                 continue;
-            } else if (FormRendererBase.class.isAssignableFrom(object.getClass())) {
+            } else if (SourceServiceBase.class.isAssignableFrom(object.getClass())) {
+                sourceServiceBase = (SourceServiceBase) object;
+                continue;
+            }  else if (FormRendererBase.class.isAssignableFrom(object.getClass())) {
                 formRendererBase = (FormRendererBase) object;
                 continue;
             } else if (KieServerRegistry.class.isAssignableFrom(object.getClass())) {
@@ -64,10 +69,11 @@ public class JbpmUIRestApplicationComponentsService implements KieServerApplicat
             }
         }
 
-        List<Object> components = new ArrayList<Object>(2);
+        List<Object> components = new ArrayList<Object>(4);
 
         components.add(new FormResource(formServiceBase, formRendererBase, context));
         components.add(new ImageResource(imageServiceBase, context));
+        components.add(new SourceResource(sourceServiceBase, context));
         components.add(new StaticFilesResource(formRendererBase));
 
         return components;

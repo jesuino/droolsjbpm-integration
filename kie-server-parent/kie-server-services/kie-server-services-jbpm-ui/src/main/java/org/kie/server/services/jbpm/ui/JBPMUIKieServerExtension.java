@@ -42,6 +42,7 @@ import org.kie.server.services.api.KieServerRegistry;
 import org.kie.server.services.api.SupportedTransports;
 import org.kie.server.services.impl.KieServerImpl;
 import org.kie.server.services.jbpm.ui.img.ImageReference;
+import org.kie.server.services.jbpm.ui.source.SourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,13 +58,15 @@ public class JBPMUIKieServerExtension implements KieServerExtension {
     private List<Object> services = new ArrayList<Object>();
     private boolean initialized = false;
 
-    private ConcurrentMap<String, ImageReference> imageReferences = new ConcurrentHashMap<String, ImageReference>();
+    private ConcurrentMap<String, ImageReference> imageReferences = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, SourceReference> sourceReferences = new ConcurrentHashMap<>();
 
     private KieServerRegistry registry;
 
     private FormServiceBase formServiceBase;
     private ImageServiceBase imageServiceBase;
     private FormRendererBase formRendererBase;
+    private SourceServiceBase sourceServiceBase;
 
     private DeploymentService deploymentService;
 
@@ -142,10 +145,12 @@ public class JBPMUIKieServerExtension implements KieServerExtension {
         formServiceBase = new FormServiceBase(definitionService, runtimeDataService, userTaskService, formManagerService, registry);
         imageServiceBase = new ImageServiceBase(runtimeDataService, imageReferences, registry);
         formRendererBase = new FormRendererBase(definitionService, userTaskService, formManagerService, caseRuntimeDataService, registry);
-
+        sourceServiceBase = new SourceServiceBase(sourceReferences);
+        
         services.add(formServiceBase);
         services.add(imageServiceBase);
         services.add(formRendererBase);
+        services.add(sourceServiceBase);
 
         this.kieContainerCommandService = new JBPMUIKieContainerCommandServiceImpl(null, formServiceBase, imageServiceBase, formRendererBase);
 
@@ -175,7 +180,7 @@ public class JBPMUIKieServerExtension implements KieServerExtension {
 
                 KieContainer kieContainer = kieContainerInstance.getKieContainer();
                 imageReferences.putIfAbsent(id, new ImageReference(kieContainer, kieBaseName));
-                
+                sourceReferences.putIfAbsent(id, new SourceReference(kieContainer, kieBaseName));
                 formRendererBase.indexDeploymentForms(id);
             }
         } catch (Exception e) {
@@ -204,6 +209,7 @@ public class JBPMUIKieServerExtension implements KieServerExtension {
         }
 
         imageReferences.remove(id);
+        sourceReferences.remove(id);
         formRendererBase.dropDeploymentForms(id);
     }
 
@@ -220,6 +226,7 @@ public class JBPMUIKieServerExtension implements KieServerExtension {
                 formServiceBase,
                 imageServiceBase,
                 formRendererBase,
+                sourceServiceBase,
                 registry
         };
         for( KieServerApplicationComponentsService appComponentsService : appComponentsServices ) {
